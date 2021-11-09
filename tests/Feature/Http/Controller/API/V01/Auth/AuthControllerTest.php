@@ -58,4 +58,5 @@ class AuthControllerTest extends TestCase
         $response = $this->actingAs($user)->postJson(route('auth.logout'));
         $response->assertStatus(200);
     }
+
 }
