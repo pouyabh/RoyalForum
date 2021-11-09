@@ -1,6 +1,6 @@
 <?php
 
-namespace Http;
+namespace Tests\Feature\Http\Controller\API\V01\Auth;
 
 use App\Models\User;
 use Database\Factories\UserFactory;
@@ -12,7 +12,7 @@ class AuthControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function test_register_should_be_validate()
+    public function test_register_should_be_validated()
     {
         $response = $this->postJson(route('auth.register'));
         $response->assertStatus(422);
@@ -29,7 +29,7 @@ class AuthControllerTest extends TestCase
 
     }
 
-    public function test_login_should_be_validate()
+    public function test_login_should_be_validated()
     {
         $response = $this->postJson(route('auth.login'));
         $response->assertStatus(422);
