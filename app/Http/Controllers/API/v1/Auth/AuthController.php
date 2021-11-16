@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\v01\Auth;
+namespace App\Http\Controllers\API\v1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controller\API\V01\Auth;
+namespace Tests\Feature\API\v1\Auth;
 
 use App\Models\User;
 use Database\Factories\ChannelFactory;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
-class AuthControllerTest extends TestCase
+class AuthTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 

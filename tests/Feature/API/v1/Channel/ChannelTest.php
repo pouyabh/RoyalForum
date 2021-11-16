@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controller\API\V01\Channel;
+namespace Tests\Feature\API\v1\Channel;
 
 
 use App\Models\Channel;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
-class ChannelControllerTest extends TestCase
+class ChannelTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
