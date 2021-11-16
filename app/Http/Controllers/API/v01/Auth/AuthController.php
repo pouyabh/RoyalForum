@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Dotenv\Loader\Resolver;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -25,7 +26,7 @@ class AuthController extends Controller
         // Insert Into DataBase
         resolve(UserRepository::class)->create($request);
 
-        return response()->json(['message' => "user created successfully"], 201);
+        return response()->json(['message' => "user created successfully"], Response::HTTP_CREATED);
     }
 
     public function login(Request $request)
@@ -36,7 +37,7 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
         if (Auth::attempt($request->only(['email', 'password',]))) {
-            return response()->json(Auth::user(), 200);
+            return response()->json(Auth::user(), Response::HTTP_OK);
         }
         throw ValidationException::withMessages([
             'email' => 'Incorrect Credential.'
@@ -45,7 +46,7 @@ class AuthController extends Controller
 
     public function user() // for show information user
     {
-        return response()->json(Auth::user(), 200);
+        return response()->json(Auth::user(), Response::HTTP_OK);
     }
 
     public function logout()
@@ -53,6 +54,6 @@ class AuthController extends Controller
         Auth::logout();
         return response()->json([
             'message' => "logged out Successfully"
-        ], 200);
+        ], Response::HTTP_OK);
     }
 }
