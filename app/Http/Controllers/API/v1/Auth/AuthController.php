@@ -24,7 +24,11 @@ class AuthController extends Controller
         ]);
 
         // Insert Into DataBase
-        resolve(UserRepository::class)->create($request);
+        $user = resolve(UserRepository::class)->create($request);
+
+        $DefaultSuperAdminEmail = config('permission.default_super_admin_email');
+        $user->email == $DefaultSuperAdminEmail ? $user->assignRole('Super Admin') : $user->assignRole('User');
+
 
         return response()->json(['message' => "user created successfully"], Response::HTTP_CREATED);
     }

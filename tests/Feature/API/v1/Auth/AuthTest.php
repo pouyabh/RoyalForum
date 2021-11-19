@@ -7,11 +7,25 @@ use Database\Factories\ChannelFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
+    public function registerRolesPermissions()
+    {
+        $Role_Database = Role::where('name', config('permission.default_roles')[0]);
+        if ($Role_Database->count() < 1) {
+            foreach (config('permission.default_roles') as $role) {
+                Role::create([
+                    'name' => $role,
+                ]);
+            }
+        }
+    }
 
     public function test_register_should_be_validated()
     {
@@ -21,6 +35,7 @@ class AuthTest extends TestCase
 
     public function test_new_user_can_register()
     {
+        $this->registerRolesPermissions();
         $response = $this->postJson(route('auth.register', [
             'name' => $this->faker->name,
             'email' => $this->faker->unique->email,
