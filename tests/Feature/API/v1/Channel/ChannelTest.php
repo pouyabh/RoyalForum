@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ChannelTest extends TestCase
@@ -17,19 +19,19 @@ class ChannelTest extends TestCase
 
     public function registerRolesAndPermissions()
     {
-        $roleInDatabase = \Spatie\Permission\Models\Role::where('name', config('permission.default_roles')[0]);
+        $roleInDatabase = Role::where('name', config('permission.default_roles')[0]);
         if ($roleInDatabase->count() < 1) {
             foreach (config('permission.default_roles') as $role) {
-                \Spatie\Permission\Models\Role::create([
+                Role::create([
                     'name' => $role
                 ]);
             }
         }
 
-        $permissionInDatabase = \Spatie\Permission\Models\Permission::where('name', config('permission.default_permissions')[0]);
+        $permissionInDatabase = Permission::where('name', config('permission.default_permissions')[0]);
         if ($permissionInDatabase->count() < 1) {
             foreach (config('permission.default_permissions') as $permission) {
-                \Spatie\Permission\Models\Permission::create([
+                Permission::create([
                     'name' => $permission
                 ]);
             }
