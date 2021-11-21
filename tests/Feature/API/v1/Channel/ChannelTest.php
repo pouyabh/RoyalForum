@@ -40,6 +40,7 @@ class ChannelTest extends TestCase
 
     public function test_all_channel_list_should_be_accessible()
     {
+
         $response = $this->get(route('channel.all'));
 
         $response->assertStatus(Response::HTTP_OK);
