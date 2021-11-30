@@ -29,14 +29,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Super Admin') ? true : null;
+        });
+
         Gate::define('user-thread', function (User $user, Thread $thread) {
-            return $thread->user_id == $user->id;
+            return $thread->id === $user->id;
         });
 
 
-//        Gate::before(function ($user, $ability) {
-//            return $user->hasRole('Super Admin') ? true : null;
-//        });
-//
     }
 }

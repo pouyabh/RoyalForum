@@ -7,6 +7,7 @@ use App\Models\Thread;
 use App\Repositories\ThreadRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ThreadController extends Controller
@@ -42,7 +43,7 @@ class ThreadController extends Controller
             $request->validate([
                 'best_answer_id' => ['required']
             ]);
-        }else{
+        } else {
             $request->validate([
                 'title' => 'required',
                 'slug' => 'required',
@@ -50,20 +51,32 @@ class ThreadController extends Controller
                 'channel_id' => 'required'
             ]);
         }
-        resolve(ThreadRepository::class)->edit($thread, $request);
-
+        if (Gate::forUser(auth()->user())->allows('user-thread', $thread)) {
+            resolve(ThreadRepository::class)->edit($thread, $request);
+            return response()->json([
+                'message' => 'Thread Updated Successfully'
+            ], ResponseAlias::HTTP_OK);
+        }
         return response()->json([
-            'message' => 'Thread Updated Successfully'
-        ], ResponseAlias::HTTP_OK);
+            'message' => 'Access Denied'
+        ], ResponseAlias::HTTP_FORBIDDEN);
+
+
     }
 
     public function destroy(Thread $thread, Request $request): JsonResponse
     {
-        resolve(ThreadRepository::class)->destroy($thread);
+        if (Gate::forUser(auth()->user())->allows('user-thread', $thread)) {
+            resolve(ThreadRepository::class)->destroy($thread);
 
+            return response()->json([
+                'message' => 'Thread Deleted Successfully'
+            ], ResponseAlias::HTTP_OK);
+        }
         return response()->json([
-            'message' => 'Thread Deleted Successfully'
-        ], ResponseAlias::HTTP_OK);
+            'message' => 'Access Denied'
+        ], ResponseAlias::HTTP_FORBIDDEN);
+
 
     }
 }

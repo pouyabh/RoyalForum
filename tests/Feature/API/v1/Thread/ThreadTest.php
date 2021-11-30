@@ -57,6 +57,7 @@ class ThreadTest extends TestCase
     public function test_update_thread()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $thread = Thread::factory()->create();
         $response = $this->putJson(route('threads.update', $thread), [
             'title' => $this->faker->title,
@@ -74,6 +75,7 @@ class ThreadTest extends TestCase
     public function test_add_best_answer()
     {
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $thread = Thread::factory()->create();
         $response = $this->putJson(route('threads.update', $thread), [
             'best_answer_id' => 1,
@@ -89,7 +91,11 @@ class ThreadTest extends TestCase
 
     public function test_can_delete()
     {
-        $thread = Thread::factory()->create();
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $thread = Thread::factory()->create([
+            'user_id' => $user->id,
+        ]);
         $response = $this->deleteJson(route('threads.destroy', $thread))->assertSuccessful();
 
         $response->assertSeeText('Thread Deleted Successfully');
