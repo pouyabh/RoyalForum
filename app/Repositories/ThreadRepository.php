@@ -33,12 +33,18 @@ class ThreadRepository
 
     public function edit($thread, $request)
     {
-        $thread->update([
-            'title' => $request->title,
-            'slug' => $request->slug,
-            'content' => $request->content,
-            'channel_id' => $request->channel_id,
-        ]);
+        if ($request->has('best_answer_id')) {
+            $thread->update([
+                'best_answer_id' => $request->best_answer_id
+            ]);
+        }else{
+            $thread->update([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'content' => $request->content,
+                'channel_id' => $request->channel_id,
+            ]);
+        }
     }
 
     public function destroy($thread)
