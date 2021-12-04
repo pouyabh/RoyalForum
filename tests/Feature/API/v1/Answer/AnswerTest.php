@@ -17,7 +17,9 @@ class AnswerTest extends TestCase
 
     public function test_can_get_all_answers()
     {
-        $response = $this->getJson(route('answers.index'))->assertSuccessful();
+        $response = $this->get(route('answers.index'));
+
+        $response->assertSuccessful();
     }
 
     public function test_create_answer_should_be_validated()
@@ -29,7 +31,8 @@ class AnswerTest extends TestCase
 
     public function test_submit_answer_for_thread()
     {
-        Sanctum::actingAs(User::factory()->create());
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $thread = Thread::factory()->create();
         $response = $this->postJson(route('answers.store'), [
             'content' => $this->faker->word,
@@ -48,9 +51,12 @@ class AnswerTest extends TestCase
 
     public function test_can_update_own_answer_for_thread()
     {
-        $answer = Answer::factory()->create();
-        Sanctum::actingAs(User::factory()->create());
-        $response = $this->putJson(route('answers.update', [$answer]), [
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $answer = Answer::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->putJson(route('answers.update', $answer), [
             'content' => $this->faker->word,
             'thread_id' => Thread::factory()->create()->id,
         ]);
@@ -59,9 +65,12 @@ class AnswerTest extends TestCase
 
     public function can_delete_own_answer()
     {
-        Sanctum::actingAs(User::factory()->create());
-        $answer = Answer::factory()->create();
-        $response = $this->deleteJson(route('answers.destroy',[$answer]));
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $answer = Answer::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->deleteJson(route('answers.destroy', $answer));
         $response->assertStatus(ResponseAlias::HTTP_OK);
     }
 }

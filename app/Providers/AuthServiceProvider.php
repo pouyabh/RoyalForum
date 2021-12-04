@@ -37,5 +37,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('user-thread', function (User $user, Thread $thread) {
             return $thread->id === $user->id;
         });
+
+        Gate::define('user-answer', function (User $user, Answer $answer) {
+            return $answer->user_id == $user->id;
+        });
     }
 }
