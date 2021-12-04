@@ -15,4 +15,7 @@ Route::prefix('v1')->group(function () {
     // Thread Routes
     include __DIR__ . '\API\v1\thread_api.php';
 
+    // Answer Routes
+    include __DIR__ . '\API\v1\answer_api.php';
+
 });
