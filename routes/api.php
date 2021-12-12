@@ -18,4 +18,7 @@ Route::prefix('v1')->group(function () {
     // Answer Routes
     include __DIR__ . '\API\v1\answer_api.php';
 
+    // Subscribe Routes
+    include __DIR__ . '\API\v1\subscribe_api.php';
+
 });

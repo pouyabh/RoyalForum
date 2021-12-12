@@ -4,10 +4,15 @@ namespace App\Http\Controllers\API\v1\Answer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Answer;
+use App\Models\Thread;
+use App\Notifications\NewReplySubmitted;
 use App\Repositories\AnswerRepository;
+use App\Repositories\SubscribeRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AnswerController extends Controller
@@ -24,7 +29,14 @@ class AnswerController extends Controller
             'content' => ['required'],
             'thread_id' => ['required'],
         ]);
-        resolve(AnswerRepository::class)->create($request);
+        $answer = resolve(AnswerRepository::class)->create($request);
+
+        //Get List of User Id Witch Subscribed To a Thread ID
+        $notifiable_user_id = resolve(SubscribeRepository::class)->getNotifiableUsers($request->thread_id);
+        //Get User Instance From ID
+        $notifiable_users = resolve(UserRepository::class)->find($notifiable_user_id);
+        //Send NewReplySubmitted notification To Subscribed Users
+        Notification::send($notifiable_users, new NewReplySubmitted(Thread::find($request->thread_id)));
         return response()->json(['message' => 'Answer Created Successfully'], ResponseAlias::HTTP_CREATED);
     }
 
