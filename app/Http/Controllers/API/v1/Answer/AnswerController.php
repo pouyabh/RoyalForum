@@ -29,14 +29,19 @@ class AnswerController extends Controller
             'content' => ['required'],
             'thread_id' => ['required'],
         ]);
-        $answer = resolve(AnswerRepository::class)->create($request);
 
+        // insert data into DB
+        $answer = resolve(AnswerRepository::class)->create($request);
         //Get List of User Id Witch Subscribed To a Thread ID
         $notifiable_user_id = resolve(SubscribeRepository::class)->getNotifiableUsers($request->thread_id);
         //Get User Instance From ID
         $notifiable_users = resolve(UserRepository::class)->find($notifiable_user_id);
         //Send NewReplySubmitted notification To Subscribed Users
         Notification::send($notifiable_users, new NewReplySubmitted(Thread::find($request->thread_id)));
+        // increase score
+        if (Thread::find($request->thread_id)->user_id != auth()->id()) {
+            auth()->user()->increment('score', 10);
+        }
         return response()->json(['message' => 'Answer Created Successfully'], ResponseAlias::HTTP_CREATED);
     }
 

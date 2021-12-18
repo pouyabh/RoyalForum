@@ -41,6 +41,19 @@ class AnswerTest extends TestCase
         $response->assertStatus(ResponseAlias::HTTP_CREATED);
     }
 
+    public function test_user_score_will_increase_by_submit_new_answer()
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $thread = Thread::factory()->create();
+        $response = $this->postJson(route('answers.store'), [
+            'content' => $this->faker->word,
+            'thread_id' => $thread->id,
+        ]);
+        $response->assertStatus(ResponseAlias::HTTP_CREATED);
+        $this->assertEquals(10, $user->score);
+    }
+
     public function test_update_answer_should_be_validated()
     {
         $answer = Answer::factory()->create();
