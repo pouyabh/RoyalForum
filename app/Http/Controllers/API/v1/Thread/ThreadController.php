@@ -12,6 +12,15 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ThreadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['user.block'])
+            ->except([
+                'index',
+                'show',
+            ]);
+    }
+
     public function index(): JsonResponse
     {
         $threads = resolve(ThreadRepository::class)->getAvailableThreads();

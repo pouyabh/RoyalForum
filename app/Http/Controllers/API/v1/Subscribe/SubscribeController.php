@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class SubscribeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['user.block']);
+    }
+
     public function subscribe(Thread $thread): \Illuminate\Http\JsonResponse
     {
         auth()->user()->subscribes()->create([

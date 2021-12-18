@@ -17,6 +17,14 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AnswerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['user.block'])
+            ->except([
+                'index',
+            ]);
+    }
+
     public function index(): JsonResponse
     {
         $answers = resolve(AnswerRepository::class)->getAllAnswers();

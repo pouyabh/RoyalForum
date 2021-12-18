@@ -24,6 +24,9 @@ class AnswerTest extends TestCase
 
     public function test_create_answer_should_be_validated()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
         $response = $this->postJson(route('answers.store'), []);
         $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['content', 'thread_id']);
@@ -56,6 +59,8 @@ class AnswerTest extends TestCase
 
     public function test_update_answer_should_be_validated()
     {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $answer = Answer::factory()->create();
         $response = $this->putJson(route('answers.update', [$answer]), []);
         $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
