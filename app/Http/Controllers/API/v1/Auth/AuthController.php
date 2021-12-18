@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\API\v1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Repositories\UserRepository;
-use Dotenv\Loader\Resolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -50,7 +47,11 @@ class AuthController extends Controller
 
     public function user() // for show information user
     {
-        return response()->json(Auth::user(), Response::HTTP_OK);
+        $data = [
+            Auth::user(),
+            'notifications' => Auth::user()->unreadNotifications(),
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     public function logout()

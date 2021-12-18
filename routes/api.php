@@ -9,6 +9,9 @@ Route::prefix('v1')->group(function () {
     // Auth Routes
     include __DIR__ . '\API\v1\auth_api.php';
 
+    // Users Routes
+    include __DIR__ . '\API\v1\user_routes.php';
+
     // Channel Routes
     include __DIR__ . '\API\v1\channel_api.php';
 

@@ -20,4 +20,9 @@ class UserRepository
     {
         return User::find($id);
     }
+
+    public function leaderboards()
+    {
+        return User::all()->orderByDesc('score')->paginate(10);
+    }
 }
